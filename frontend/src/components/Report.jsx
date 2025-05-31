@@ -39,7 +39,7 @@ const Report = () => {
       setExpenses(res.data.expenses);
       setError('');
     } catch (err) {
-       console.error(err);
+      console.error(err);
       setError('Failed to fetch report');
     }
   };
@@ -59,7 +59,7 @@ const Report = () => {
       link.click();
       link.remove();
     } catch (err) {
-       console.error(err);
+      console.error(err);
       setError('Failed to export report');
     }
   };
@@ -81,6 +81,8 @@ const Report = () => {
           '#FF6B6B',
           '#4CAF50',
         ],
+        borderColor: '#ffffff',
+        borderWidth: 2,
       },
     ],
   };
@@ -92,58 +94,84 @@ const Report = () => {
         label: 'Spending Over Time',
         data: expenses.map((exp) => exp.amount),
         borderColor: '#36A2EB',
-        fill: false,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        fill: true,
         tension: 0.3,
+        pointBackgroundColor: '#36A2EB',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
       },
     ],
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Monthly Report</h2>
-      <div className="flex mb-4">
-        <input
-          type="number"
-          placeholder="Month (1-12)"
-          value={month}
-          onChange={(e) => setMonth(e.target.value)}
-          className="w-1/2 p-2 mr-2 border rounded"
-        />
-        <input
-          type="number"
-          placeholder="Year"
-          value={year}
-          onChange={(e) => setYear(e.target.value)}
-          className="w-1/2 p-2 border rounded"
-        />
+    <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 max-w-md w-full mx-auto md:mx-0">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Monthly Report</h2>
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
+        <div className="flex-1">
+          <label htmlFor="month" className="block text-sm font-medium text-gray-700 mb-1">Month (1-12)</label>
+          <input
+            id="month"
+            type="number"
+            placeholder="Enter month (1-12)"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+          />
+        </div>
+        <div className="flex-1">
+          <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+          <input
+            id="year"
+            type="number"
+            placeholder="Enter year"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+          />
+        </div>
       </div>
-      <button onClick={handleFetchReport} className="w-full bg-blue-600 text-white p-2 rounded mb-4">
+      <button
+        onClick={handleFetchReport}
+        className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium mb-4"
+      >
         Generate Report
       </button>
-      <button onClick={handleExportPDF} className="w-full bg-purple-600 text-white p-2 rounded mb-4">
+      <button
+        onClick={handleExportPDF}
+        className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium mb-4"
+      >
         Export as PDF
       </button>
-      {error && <p className="text-red-500">{error}</p>}
       {Object.keys(report).length > 0 ? (
-        <div>
-          <ul className="mb-4">
-            {Object.entries(report).map(([category, amount]) => (
-              <li key={category} className="mb-2">
-                <strong>{category}:</strong> ₹{amount}
-              </li>
-            ))}
-          </ul>
-          <div className="mb-4">
-            <h3 className="text-lg font-bold mb-2">Category Distribution</h3>
-            <Pie data={pieChartData} />
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-700 mb-3">Category Breakdown</h3>
+            <ul className="space-y-2">
+              {Object.entries(report).map(([category, amount]) => (
+                <li key={category} className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                  <span className="text-gray-700">{category}</span>
+                  <span className="font-bold text-green-600">₹{amount.toFixed(2)}</span>
+                </li>
+              ))}
+            </ul>
           </div>
           <div>
-            <h3 className="text-lg font-bold mb-2">Spending Trend</h3>
-            <Line data={lineChartData} />
+            <h3 className="text-lg font-semibold text-gray-700 mb-3">Category Distribution</h3>
+            <div className="relative h-64">
+              <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
+            </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-700 mb-3">Spending Trend</h3>
+            <div className="relative h-64">
+              <Line data={lineChartData} options={{ maintainAspectRatio: false }} />
+            </div>
           </div>
         </div>
       ) : (
-        <p>No report data</p>
+        <p className="text-gray-600">No report data</p>
       )}
     </div>
   );
