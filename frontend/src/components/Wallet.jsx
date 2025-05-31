@@ -18,7 +18,7 @@ const Wallet = () => {
       });
       setBalance(res.data.balance);
     } catch (err) {
-       console.error(err);
+      console.error(err);
       setError('Failed to fetch wallet');
     }
   };
@@ -29,7 +29,7 @@ const Wallet = () => {
         headers: { 'x-auth-token': localStorage.getItem('token') },
       });
     } catch (err) {
-       console.error(err);
+      console.error(err);
       console.error('Failed to check balance');
     }
   };
@@ -55,20 +55,25 @@ const Wallet = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow mb-6">
-      <h2 className="text-2xl font-bold mb-4">Wallet</h2>
-      <p className="text-lg mb-4">Balance: ₹{balance}</p>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleAddMoney}>
+    <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 max-w-md w-full mx-auto md:mx-0">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Wallet</h2>
+      <p className="text-lg text-gray-700 mb-4">Balance: <span className="font-bold text-green-600">₹{balance.toFixed(2)}</span></p>
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      <form onSubmit={handleAddMoney} className="space-y-4">
         <input
           type="number"
           placeholder="Amount to add"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
           required
         />
-        <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">Add Money</button>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+        >
+          Add Money
+        </button>
       </form>
     </div>
   );
