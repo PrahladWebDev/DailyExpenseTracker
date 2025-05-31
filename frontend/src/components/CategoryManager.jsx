@@ -49,29 +49,38 @@ const CategoryManager = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow mb-6">
-      <h2 className="text-2xl font-bold mb-4">Manage Categories</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleAddCategory}>
-        <input
-          type="text"
-          placeholder="New Category Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">Add Category</button>
+    <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 max-w-md w-full mx-auto md:mx-0">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Manage Categories</h2>
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      <form onSubmit={handleAddCategory} className="space-y-4">
+        <div>
+          <label htmlFor="categoryName" className="block text-sm font-medium text-gray-700 mb-1">New Category</label>
+          <input
+            id="categoryName"
+            type="text"
+            placeholder="Enter category name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+        >
+          Add Category
+        </button>
       </form>
-      <h3 className="text-lg font-bold mt-4 mb-2">Existing Categories</h3>
-      <ul>
+      <h3 className="text-lg font-semibold text-gray-700 mt-6 mb-3">Existing Categories</h3>
+      <ul className="space-y-2">
         {categories.map((cat) => (
-          <li key={cat} className="flex justify-between mb-2">
-            {cat}
+          <li key={cat} className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+            <span className="text-gray-700">{cat}</span>
             {cat !== 'Vegetables' && cat !== 'Fruits' && cat !== 'Utensils' && cat !== 'Appliances' && cat !== 'Clothes' && cat !== 'Travel' && cat !== 'Rent' && cat !== 'Utilities' && cat !== 'Miscellaneous' && (
               <button
                 onClick={() => handleDeleteCategory(cat)}
-                className="text-red-500"
+                className="text-red-500 hover:text-red-600 text-sm font-medium transition-colors duration-200"
               >
                 Delete
               </button>
