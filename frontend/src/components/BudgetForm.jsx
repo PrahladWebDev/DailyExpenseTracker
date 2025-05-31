@@ -21,7 +21,7 @@ const BudgetForm = () => {
       setCategories(res.data);
       if (res.data.length > 0) setCategory(res.data[0]);
     } catch (err) {
-            console.error(err);
+      console.error(err);
       setError('Failed to fetch categories');
     }
   };
@@ -43,44 +43,65 @@ const BudgetForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow mb-6">
-      <h2 className="text-2xl font-bold mb-4">Set Budget</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+    <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 max-w-md w-full mx-auto md:mx-0">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Set Budget</h2>
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="limit" className="block text-sm font-medium text-gray-700 mb-1">Budget Limit</label>
+          <input
+            id="limit"
+            type="number"
+            placeholder="Enter budget limit"
+            value={limit}
+            onChange={(e) => setLimit(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="month" className="block text-sm font-medium text-gray-700 mb-1">Month (1-12)</label>
+          <input
+            id="month"
+            type="number"
+            placeholder="Enter month (1-12)"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+          <input
+            id="year"
+            type="number"
+            placeholder="Enter year"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
         >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-        <input
-          type="number"
-          placeholder="Budget Limit"
-          value={limit}
-          onChange={(e) => setLimit(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        <input
-          type="number"
-          placeholder="Month (1-12)"
-          value={month}
-          onChange={(e) => setMonth(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        <input
-          type="number"
-          placeholder="Year"
-          value={year}
-          onChange={(e) => setYear(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">Set Budget</button>
+          Set Budget
+        </button>
       </form>
     </div>
   );
