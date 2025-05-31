@@ -104,102 +104,136 @@ const GroupForm = () => {
   const totalAmount = Object.values(contributions).reduce((sum, val) => sum + parseFloat(val || 0), 0);
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow mb-6">
-      <h2 className="text-2xl font-bold mb-4">Manage Groups & Shared Expenses</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <h3 className="text-lg font-bold mb-2">Create Group</h3>
-      <form onSubmit={handleCreateGroup}>
-        <input
-          type="text"
-          placeholder="Group Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        <select
-          multiple
-          value={selectedParticipants}
-          onChange={(e) =>
-            setSelectedParticipants(
-              Array.from(e.target.selectedOptions, (option) => option.value)
-            )
-          }
-          className="w-full p-2 mb-4 border rounded h-32"
-          required
-        >
-          {users.map((user) => (
-            <option key={user._id} value={user._id}>
-              {user.username}
-            </option>
-          ))}
-        </select>
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded mb-4">
-          Create Group
-        </button>
-      </form>
-      <h3 className="text-lg font-bold mb-2">Add Shared Expense</h3>
-      <form onSubmit={handleAddSharedExpense}>
-        <select
-          value={groupId}
-          onChange={(e) => setGroupId(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        >
-          <option value="">Select Group</option>
-          {groups.map((group) => (
-            <option key={group._id} value={group._id}>
-              {group.name}
-            </option>
-          ))}
-        </select>
-        <p className="mb-4">Total Expense: ₹{totalAmount.toFixed(2)}</p>
-        {groups
-          .find((g) => g._id === groupId)
-          ?.participants.map((userId) => {
-            const user = users.find((u) => u._id === userId);
-            return user ? (
-              <div key={user._id} className="mb-4">
-                <label className="block text-sm font-medium">
-                  {user.username}'s Contribution
-                </label>
-                <input
-                  type="number"
-                  placeholder={`Amount for ${user.username}`}
-                  value={contributions[user._id] || ''}
-                  onChange={(e) => handleContributionChange(user._id, e.target.value)}
-                  className="w-full p-2 border rounded"
-                  required
-                  min="0"
-                  step="0.01"
-                />
-              </div>
-            ) : null;
-          })}
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        >
-          <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          placeholder="Description (optional)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-        />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
-          Add Shared Expense
-        </button>
-      </form>
+    <div className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 max-w-md w-full mx-auto md:mx-0">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Manage Groups & Shared Expenses</h2>
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-700 mb-3">Create Group</h3>
+        <form onSubmit={handleCreateGroup} className="space-y-4">
+          <div>
+            <label htmlFor="groupName" className="block text-sm font-medium text-gray-700 mb-1">Group Name</label>
+            <input
+              id="groupName"
+              type="text"
+              placeholder="Enter group name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="participants" className="block text-sm font-medium text-gray-700 mb-1">Participants</label>
+            <select
+              id="participants"
+              multiple
+              value={selectedParticipants}
+              onChange={(e) =>
+                setSelectedParticipants(
+                  Array.from(e.target.selectedOptions, (option) => option.value)
+                )
+              }
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 h-32"
+              required
+            >
+              {users.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.username}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple participants</p>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+          >
+            Create Group
+          </button>
+        </form>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold text-gray-700 mb-3">Add Shared Expense</h3>
+        <form onSubmit={handleAddSharedExpense} className="space-y-4">
+          <div>
+            <label htmlFor="groupId" className="block text-sm font-medium text-gray-700 mb-1">Select Group</label>
+            <select
+              id="groupId"
+              value={groupId}
+              onChange={(e) => setGroupId(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+              required
+            >
+              <option value="">Select Group</option>
+              {groups.map((group) => (
+                <option key={group._id} value={group._id}>
+                  {group.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p className="text-gray-700 mb-4">Total Expense: <span className="font-bold text-green-600">₹{totalAmount.toFixed(2)}</span></p>
+          {groups
+            .find((g) => g._id === groupId)
+            ?.participants.map((userId) => {
+              const user = users.find((u) => u._id === userId);
+              return user ? (
+                <div key={user._id} className="space-y-2">
+                  <label htmlFor={`contribution-${user._id}`} className="block text-sm font-medium text-gray-700">
+                    {user.username}'s Contribution
+                  </label>
+                  <input
+                    id={`contribution-${user._id}`}
+                    type="number"
+                    placeholder={`Enter amount for ${user.username}`}
+                    value={contributions[user._id] || ''}
+                    onChange={(e) => handleContributionChange(user._id, e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                    required
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+              ) : null;
+            })}
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+              required
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description (optional)</label>
+            <input
+              id="description"
+              type="text"
+              placeholder="Enter description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue speculations-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+          >
+            Add Shared Expense
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
