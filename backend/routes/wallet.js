@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const auth = require('../middleware/auth');
-const Wallet = require('../models/Wallet');
-const nodemailer = require('nodemailer');
-const User = require('../models/User');
+import express from 'express';
+import auth from '../middleware/auth.js';
+import Wallet from '../models/Wallet.js';
+import nodemailer from 'nodemailer';
+import User from '../models/User.js';
 
+const router = express.Router();
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -32,7 +32,7 @@ router.post('/add', auth, async (req, res) => {
     if (!wallet) {
       wallet = new Wallet({ userId: req.user.id, balance: 0 });
     }
-    wallet.balance += parseFloat(amount);
+    wallet.balance += Number(amount);
     await wallet.save();
     res.json(wallet);
   } catch (error) {
@@ -46,11 +46,11 @@ router.get('/check-balance', auth, async (req, res) => {
     const wallet = await Wallet.findOne({ userId: req.user.id });
     if (wallet.balance < 500) {
       const user = await User.findById(req.user.id);
-      await transporter.sendMail({
+      transporter.sendMail({
         to: user.email,
         subject: 'Low Wallet Balance',
         text: `Your balance is ₹${wallet.balance}. Please add funds.`,
-      });
+      }).catch(console.error);
     }
     res.json({ msg: 'Balance checked' });
   } catch (error) {
@@ -58,4 +58,4 @@ router.get('/check-balance', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
