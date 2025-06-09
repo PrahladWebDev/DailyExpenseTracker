@@ -1,8 +1,14 @@
-const mongoose = require('mongoose');
+// models/Category.js
 
-const categorySchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+import mongoose from 'mongoose';
+
+const { Schema, model } = mongoose;
+
+const categorySchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, required: true, unique: true },
 });
 
-module.exports = mongoose.model('Category', categorySchema);
+const Category = model('Category', categorySchema);
+
+export default Category;
