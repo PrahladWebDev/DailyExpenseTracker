@@ -1,10 +1,13 @@
-const express = require('express');
+// routes/wallet.js
+
+import express from 'express';
+import auth from '../middleware/auth.js';
+import Wallet from '../models/Wallet.js';
+import Expense from '../models/Expense.js';
+import Budget from '../models/Budget.js';
+import PDFDocument from 'pdfkit';
+
 const router = express.Router();
-const auth = require('../middleware/auth');
-const Wallet = require('../models/Wallet');
-const Expense = require('../models/Expense');
-const Budget = require('../models/Budget');
-const PDFDocument = require('pdfkit');
 
 router.post('/', auth, async (req, res) => {
   const { amount, category, description } = req.body;
@@ -95,4 +98,4 @@ router.get('/report/export', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
