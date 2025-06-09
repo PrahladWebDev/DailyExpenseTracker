@@ -1,9 +1,20 @@
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
-const { processRecurringExpenses } = require('./routes/recurring');
-const cron = require('node-cron');
-require('dotenv').config();
+// server.js (or index.js)
+
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import cron from 'node-cron';
+import connectDB from './config/db.js';
+import { router as recurringRouter, processRecurringExpenses } from './routes/recurring.js';
+
+import authRoutes from './routes/auth.js';
+import walletRoutes from './routes/wallet.js';
+import expenseRoutes from './routes/expense.js';
+import budgetRoutes from './routes/budget.js';
+import groupRoutes from './routes/group.js';
+import categoryRoutes from './routes/category.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -15,15 +26,15 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/wallet', require('./routes/wallet'));
-app.use('/api/expense', require('./routes/expense'));
-app.use('/api/recurring', require('./routes/recurring').router);
-app.use('/api/budget', require('./routes/budget'));
-app.use('/api/group', require('./routes/group'));
-app.use('/api/category', require('./routes/category'));
+app.use('/api/auth', authRoutes);
+app.use('/api/wallet', walletRoutes);
+app.use('/api/expense', expenseRoutes);
+app.use('/api/recurring', recurringRouter);
+app.use('/api/budget', budgetRoutes);
+app.use('/api/group', groupRoutes);
+app.use('/api/category', categoryRoutes);
 
-// Schedule recurring expenses daily
+// Schedule recurring expenses daily at midnight
 cron.schedule('0 0 * * *', processRecurringExpenses);
 
 const PORT = process.env.PORT || 5000;
