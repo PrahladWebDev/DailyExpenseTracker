@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
+import auth from '../middleware/auth.js';
+import Group from '../models/Group.js';
+import Wallet from '../models/Wallet.js';
+import Expense from '../models/Expense.js';
+
 const router = express.Router();
-const auth = require('../middleware/auth');
-const Group = require('../models/Group');
-const Wallet = require('../models/Wallet');
-const Expense = require('../models/Expense');
 
 router.get('/', auth, async (req, res) => {
   try {
@@ -31,6 +32,7 @@ router.post('/', auth, async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
 router.post('/expense', auth, async (req, res) => {
   const { groupId, amount, category, description, contributions } = req.body;
   try {
@@ -92,4 +94,4 @@ router.post('/expense', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
