@@ -1,8 +1,14 @@
-const mongoose = require('mongoose');
+// models/Wallet.js
 
-const walletSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+import mongoose from 'mongoose';
+
+const { Schema, model } = mongoose;
+
+const walletSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   balance: { type: Number, default: 0 },
 });
 
-module.exports = mongoose.model('Wallet', walletSchema);
+const Wallet = model('Wallet', walletSchema);
+
+export default Wallet;
