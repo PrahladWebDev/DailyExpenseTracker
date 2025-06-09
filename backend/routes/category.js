@@ -1,7 +1,10 @@
-const express = require('express');
+// routes/category.js
+
+import express from 'express';
+import auth from '../middleware/auth.js';
+import Category from '../models/Category.js';
+
 const router = express.Router();
-const auth = require('../middleware/auth');
-const Category = require('../models/Category');
 
 router.post('/', auth, async (req, res) => {
   const { name } = req.body;
@@ -17,7 +20,19 @@ router.post('/', auth, async (req, res) => {
 router.get('/', auth, async (req, res) => {
   try {
     const categories = await Category.find({ userId: req.user.id });
-    res.json([...categories.map(c => c.name), 'Vegetables', 'Fruits', 'Utensils', 'Appliances', 'Clothes', 'Travel', 'Rent', 'Utilities', 'Miscellaneous']);
+    // Return user's categories plus default ones
+    res.json([
+      ...categories.map(c => c.name),
+      'Vegetables',
+      'Fruits',
+      'Utensils',
+      'Appliances',
+      'Clothes',
+      'Travel',
+      'Rent',
+      'Utilities',
+      'Miscellaneous',
+    ]);
   } catch (error) {
     res.status(500).json({ msg: 'Server error' });
   }
@@ -32,4 +47,4 @@ router.delete('/:name', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
